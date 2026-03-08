@@ -1,0 +1,29 @@
+# Nombre del flujo de trabajo
+name: CI Workflow
+
+# 1. Eventos que activan el flujo (Triggers)
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+# 2. Definición de los trabajos (Jobs)
+jobs:
+  build:
+    # 3. El Ejecutor (Runner): Una máquina virtual con Ubuntu
+    runs-on: ubuntu-latest
+
+    # 4. El Contenedor: Ejecutar los pasos dentro de una imagen de Python
+    container:
+      image: python:3.9-slim
+
+    # Pasos iniciales (A completarse en la Parte 2)
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install basic tools
+        run: |
+          python --version
+          pip install --upgrade pip
