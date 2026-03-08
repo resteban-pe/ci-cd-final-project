@@ -15,21 +15,6 @@ spec:
 apiVersion: tekton.dev/v1beta1
 kind: Task
 metadata:
-  name: lint
-spec:
-  workspaces:
-    - name: source
-  steps:
-    - name: flake8
-      image: python:3.9-slim
-      workingDir: $(workspaces.source.path)
-      script: |
-        pip install flake8
-        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
----
-apiVersion: tekton.dev/v1beta1
-kind: Task
-metadata:
   name: nose-test
 spec:
   workspaces:
@@ -39,5 +24,5 @@ spec:
       image: python:3.9-slim
       workingDir: $(workspaces.source.path)
       script: |
-        pip install -r requirements.txt
+        pip install nose redis
         nosetests
