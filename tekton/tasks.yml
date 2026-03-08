@@ -3,13 +3,29 @@ kind: Task
 metadata:
   name: cleanup
 spec:
+  workspaces:
+    - name: source
   steps:
     - name: clean
       image: alpine:latest
       script: |
         echo "Cleaning up workspace..."
         rm -rf $(workspaces.source.path)/*
-
+---
+apiVersion: tekton.dev/v1beta1
+kind: Task
+metadata:
+  name: lint
+spec:
+  workspaces:
+    - name: source
+  steps:
+    - name: flake8
+      image: python:3.9-slim
+      workingDir: $(workspaces.source.path)
+      script: |
+        pip install flake8
+        flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 ---
 apiVersion: tekton.dev/v1beta1
 kind: Task
@@ -23,5 +39,5 @@ spec:
       image: python:3.9-slim
       workingDir: $(workspaces.source.path)
       script: |
-        pip install flake8 nose redis
+        pip install -r requirements.txt
         nosetests
