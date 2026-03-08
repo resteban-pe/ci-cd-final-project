@@ -35,10 +35,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install flake8 nose redis  # Instalamos las herramientas explícitamente
 
-      # PASO 2: Ejecutar las pruebas unitarias
+      # PASO DE LINTING (Obligatorio para el Proyecto Final)
+      - name: Run Linting with flake8
+        run: |
+          # Detiene la ejecución si hay errores de sintaxis o Python
+          # --count: cuenta errores, --select=E9,F63,F7,F82: errores críticos
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Advertencias de estilo (opcional pero profesional)
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+      # PASO 2 Ejecutar las pruebas unitarias
       # Usamos una variable de entorno para decirle a Python dónde está Redis
-      - name: Run unit tests
+      - name: Run unit tests with nosetests
         env:
+          # El host 'redis' es el nombre del servicio definido arriba
           DATABASE_URI: redis://redis:6379
         run: nosetests
